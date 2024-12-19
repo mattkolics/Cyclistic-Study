@@ -1,0 +1,96 @@
+ANALYSIS
+--------
+
+
+CREATE TABLE oceanic-spot-440419-n8.cyclistic_data2023.analysis_count_of_trips AS
+SELECT
+ ride_type, member_casual, COUNT(*) AS count_of_trips 
+FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_cleaned`
+GROUP BY ride_type, member_casual
+ORDER BY member_casual, count_of_trips DESC
+
+
+CREATE TABLE oceanic-spot-440419-n8.cyclistic_data2023.analysis_trips_per_month AS
+SELECT member_casual, month, count(*) AS count_of_trips
+  FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_cleaned`
+  GROUP BY member_casual, month
+
+
+CREATE TABLE oceanic-spot-440419-n8.cyclistic_data2023.analysis_trips_per_day AS
+SELECT member_casual, day_of_week, count(*) AS count_of_trips
+  FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_cleaned`
+  GROUP BY member_casual, day_of_week
+
+
+CREATE TABLE oceanic-spot-440419-n8.cyclistic_data2023.analysis_trips_per_hour AS
+SELECT member_casual, EXTRACT(HOUR FROM started_at) AS time_of_day, count(*) AS count_of_trips
+  FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_cleaned`
+  GROUP BY member_casual, time_of_day
+  ORDER BY time_of_day
+
+
+SELECT  *
+FROM `oceanic-spot-440419-n8.cyclistic_data2023.analysis_trips_per_hour`
+ORDER BY member_casual, time_of_day, count_of_trips DESC
+
+
+CREATE TABLE oceanic-spot-440419-n8.cyclistic_data2023.analysis_avg_trip_length AS
+SELECT member_casual, day_of_week,
+     ROUND(AVG(duration_minutes), 0) AS avg_ride_time_minutes,
+     AVG(AVG(duration_minutes)) OVER(PARTITION BY member_casual) AS combined_avg_ride_time
+  FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_cleaned`
+  GROUP BY member_casual, day_of_week
+
+
+CREATE TABLE oceanic-spot-440419-n8.cyclistic_data2023.analysis_start_station_casual AS
+SELECT start_station_name,
+     ROUND(AVG(start_lat), 4) AS start_lat,
+     ROUND(AVG(start_lng), 4) AS start_lng, 
+     count(*) AS num_of_rides
+  FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_cleaned`
+  WHERE member_casual = 'casual' AND start_station_name <> 'On Bike Lock'
+  GROUP BY start_station_name
+
+
+CREATE TABLE oceanic-spot-440419-n8.cyclistic_data2023.analysis_start_station_member AS
+SELECT start_station_name,
+     ROUND(AVG(start_lat), 4) AS start_lat,
+     ROUND(AVG(start_lng), 4) AS start_lng, 
+     count(*) AS num_of_rides
+  FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_cleaned`
+  WHERE member_casual = 'member' AND start_station_name <> 'On Bike Lock'
+  GROUP BY start_station_name
+
+
+CREATE TABLE oceanic-spot-440419-n8.cyclistic_data2023.analysis_start_end_station_casual AS
+SELECT end_station_name,
+     ROUND(AVG(start_lat), 4) AS end_lat,
+     ROUND(AVG(start_lng), 4) AS end_lng, 
+     count(*) AS num_of_rides
+  FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_cleaned`
+  WHERE member_casual = 'casual' AND end_station_name <> 'On Bike Lock'
+  GROUP BY end_station_name
+
+
+CREATE TABLE oceanic-spot-440419-n8.cyclistic_data2023.analysis_end_station_member AS
+SELECT end_station_name,
+     ROUND(AVG(start_lat), 4) AS end_lat,
+     ROUND(AVG(start_lng), 4) AS end_lng, 
+     count(*) AS num_of_rides
+  FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_cleaned`
+  WHERE member_casual = 'member' AND end_station_name <> 'On Bike Lock'
+  GROUP BY end_station_name
+
+
+CREATE TABLE oceanic-spot-440419-n8.cyclistic_data2023.analysis_lock_location_casual AS
+SELECT end_lat, end_lng, count(*) AS num_of_rides
+  FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_cleaned`
+  WHERE member_casual = 'casual'
+  GROUP BY end_lat, end_lng
+
+
+CREATE TABLE oceanic-spot-440419-n8.cyclistic_data2023.analysis_lock_location_member AS
+SELECT end_lat, end_lng, count(*) AS num_of_rides
+  FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_cleaned`
+  WHERE member_casual = 'member'
+  GROUP BY end_lat, end_lng
