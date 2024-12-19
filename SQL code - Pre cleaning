@@ -1,0 +1,63 @@
+PRE CLEANING
+------------
+
+SELECT
+length(ride_id),
+count (*)
+FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_202301_202409`
+GROUP BY length(ride_id)
+
+
+SELECT
+COUNT (DISTINCT ride_id)
+FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_202301_202409`
+
+
+SELECT DISTINCT rideable_type
+FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_202301_202409`
+
+
+SELECT *
+FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_202301_202409`
+WHERE TIMESTAMP_DIFF(endead_at, started_at, MINUTE) <= 1 OR
+TIMESTAMP_DIFF(endead_at, started_at, MINUTE) >= 1440;
+
+
+SELECT start_station_name, count(*)
+FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_202301_202409`
+GROUP BY start_station_name
+ORDER BY start_station_name;
+
+
+SELECT end_station_name, count(*)
+FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_202301_202409`
+GROUP BY end_station_name
+ORDER BY end_station_name;
+
+
+SELECT COUNT(DISTINCT(start_station_name)) AS dist_startstation,
+  COUNT(DISTINCT(end_station_name)) AS dist_endstation,
+  COUNT(DISTINCT(start_station_id)) AS dist_startid,
+  COUNT(DISTINCT(end_station_id)) AS dist_endid
+FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_202301_202409`
+
+
+SELECT count(*) as num_of_rides
+FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_202301_202409`
+WHERE
+ start_station_name IS NULL OR
+ start_station_id IS NULL OR
+ end_station_name IS NULL OR
+ end_station_id IS NULL
+
+
+SELECT *
+FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_202301_202409`
+WHERE start_lat IS NULL OR
+start_lng IS NULL OR
+end_lat IS NULL OR
+end_lng IS NULL;
+
+
+SELECT DISTINCT member_casual
+FROM `oceanic-spot-440419-n8.cyclistic_data2023.cyclistic_dataset_202301_202409`
